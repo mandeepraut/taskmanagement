@@ -1,0 +1,26 @@
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        
+    <link rel="stylesheet" type="text/css" href="https://bootswatch.com/5/quartz/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <title>Task | Dashboard</title>
+</head>
+<body>
+    {% include 'profile/base.html' %}
+    <div class="container text-center">
+        <!-- <div class="dashboard-box"> Add a class for the box -->
+            
+            <br><hr>
+            <h3 >This is our Dashboard page!</h3>
+            <hr>
+            <p>Welcome, to Task Management <br><br>Your personal task manager application!</p>
+            <a href="{% url 'profile-management' %}" class="btn btn-info">Profile Management</a>
+           
+    </div>
+    
+      
+</body>
+</html>
