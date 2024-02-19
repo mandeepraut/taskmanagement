@@ -26,10 +26,4 @@ class UpdateUserForm(forms.ModelForm):
         model = User
         fields=['username','email']
         
-from django import forms
-from .models import Review
 
-class ReviewForm(forms.ModelForm):
-    class Meta:
-        model = Review
-        fields = ['reviewer_name', 'reviewer_title']
