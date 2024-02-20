@@ -14,10 +14,6 @@ def home(request):
 
     return render(request,'home.html')
 
-
-
-   
-
 @login_required(login_url='my-login')
 def createTask(request):
     form=TaskForm()
@@ -33,13 +29,19 @@ def createTask(request):
     return render(request,'profile/create-task.html',context=context)
 
 
+from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='my-login')
 def viewTasks(request):
-    current_user = request.user
-    tasks = Task.objects.filter(assigned_to=current_user)
+    if request.user.username == 'admin10':
+        tasks = Task.objects.all()
+    else:
+        current_user = request.user
+        tasks = Task.objects.filter(assigned_to=current_user)
+
     context = {'tasks': tasks}
     return render(request, 'profile/view-tasks.html', context=context)
+
 
 
 @login_required(login_url='my-login')
