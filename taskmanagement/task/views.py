@@ -56,15 +56,26 @@ def updateTask(request, pk):
    context={'form':form}
    return render(request,'profile/update-task.html',context=context)  
    
+
+
+from django.contrib.auth.decorators import login_required
+
 @login_required(login_url='my-login')
 def deleteTask(request, pk):
-    task=Task.objects.get(id=pk)
-    if request.method=='POST':
-          task.delete()
-          return redirect('view-tasks')
-          
-    context={'object':task}
-    return render(request,'profile/delete-task.html',context=context)
+    task = Task.objects.get(id=pk)
+
+    if request.user.username == 'admin10':
+        if request.method == 'POST':
+            task.delete()
+            return redirect('view-tasks')
+        else:
+            context = {'object': task}
+            return render(request, 'profile/delete-task.html', context=context)
+    else:
+        # If the user is not 'admin10', handle the access denied scenario
+        return HttpResponse("You are not authorized to delete tasks.")
+
+
 
 def register(request):
     form=CreateUserForm()

@@ -4,6 +4,12 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    
+
+
+   
+
+    <script src="{% static 'js/app.js' %}"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />       
     <link rel="stylesheet" type="text/css" href="https://bootswatch.com/5/quartz/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">   
@@ -16,10 +22,10 @@
             <h2 class="text-center"> Delete a Task</h2>
         </div>
         <div class="card-body">
-            <form action="" method="POST">
+            <form action="" method="POST" id="delete-form">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <p>Are you sure want to delete "{{object}}"?</p>
+                <p>Are you sure you want to delete "{{object}}"?</p>
                 <a href="{% url 'view-tasks' %}" class="btn btn-info">Go Back</a>
                 <br><br><br><br>
                 <input type="submit" value="Delete Task" class="btn btn-primary">
@@ -29,5 +35,15 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById("delete-form").addEventListener("submit", function(event) {
+        var confirmation = confirm("Are you sure you want to delete this task?");
+        if (!confirmation) {
+            event.preventDefault();
+        }
+    });
+</script>
+
 </body>
 </html>
