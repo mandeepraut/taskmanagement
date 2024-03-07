@@ -16,7 +16,7 @@ class CreateUserForm(UserCreationForm):
         fields=['username','email','password1','password2']
 
 class LoginForm(AuthenticationForm):
-    username=forms.CharField(widget=TextInput())
+    username=forms.CharField(widget=TextInput(),)
     password=forms.CharField(widget=PasswordInput())
 #update a user
     
@@ -27,3 +27,7 @@ class UpdateUserForm(forms.ModelForm):
         fields=['username','email']
         
 
+class TaskStatusForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['status']

@@ -14,19 +14,34 @@ def home(request):
 
     return render(request,'home.html')
 
+from django.shortcuts import redirect, render
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
 @login_required(login_url='my-login')
 def createTask(request):
-    form=TaskForm()
+    # Check if the user is an admin
+    if request.user.username == 'admin10':
+        form = TaskForm()
 
-    if request.method=="POST":
-        form=TaskForm(request.POST)
-        if form.is_valid():
-            task=form.save(commit=False)
-            task.user=request.user
-            task.save()
-            return redirect('view-tasks')
-    context={'form':form}
-    return render(request,'profile/create-task.html',context=context)
+        if request.method == "POST":
+            form = TaskForm(request.POST)
+            if form.is_valid():
+                task = form.save(commit=False)
+                task.user = request.user
+                task.save()
+                messages.success(request, 'Task created successfully!')
+                return redirect('view-tasks')
+        context = {'form': form}
+        return render(request, 'profile/create-task.html', context=context)
+    else:
+        # If the user is not 'admin10', redirect to the task-denied page
+        messages.error(request, 'You are not authorized to create tasks.')
+        return redirect('task-denied')  # Corrected redirection
+
+def taskDenied(request):
+    return render(request, 'task-denied.html')
+
 
 
 from django.contrib.auth.decorators import login_required
@@ -44,18 +59,35 @@ def viewTasks(request):
 
 
 
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Task
+from .forms import TaskStatusForm
+
 @login_required(login_url='my-login')
 def updateTask(request, pk):
-   task=Task.objects.get(id=pk)
-   form=TaskForm(instance=task)
-   if request.method=='POST':
-       form=TaskForm(request.POST,instance=task)
-       if form.is_valid():
-           form.save()
-           return redirect('view-tasks')
-   context={'form':form}
-   return render(request,'profile/update-task.html',context=context)  
-   
+    task = get_object_or_404(Task, pk=pk)
+
+    # Check if the logged-in user is assigned to the task or is an admin
+    if request.user == task.assigned_to or request.user.username == 'admin10':
+        if request.method == 'POST':
+            form = TaskStatusForm(request.POST, instance=task)
+            if form.is_valid():
+                # Get the instance of the task with updated status only
+                updated_task = form.save(commit=False)
+                # Save only the status field and keep other fields unchanged
+                task.status = updated_task.status
+                task.save()
+                messages.success(request, 'Task status updated successfully!')
+                return redirect('view-tasks')
+        else:
+            form = TaskStatusForm(instance=task)
+        return render(request, 'profile/update-task.html', {'form': form})
+    else:
+        # If the user is neither assigned to the task nor an admin, show an error message
+        messages.error(request, 'You are not authorized to update this task.')
+        return redirect('view-tasks')
+
 
 
 from django.contrib.auth.decorators import login_required
@@ -72,22 +104,34 @@ def deleteTask(request, pk):
             context = {'object': task}
             return render(request, 'profile/delete-task.html', context=context)
     else:
-        # If the user is not 'admin10', handle the access denied scenario
-        return HttpResponse("You are not authorized to delete tasks.")
+        # If the user is not 'admin10', show a pop-up message
+        return render(request, 'profile/access-denied.html')
 
 
+def accessDenied(request):
+    return render(request, 'access_denied.html')
+
+
+
+
+
+from django.contrib.auth.models import User
 
 def register(request):
-    form=CreateUserForm()
-    if request.method=='POST':
-        form=CreateUserForm(request.POST)
+    form = CreateUserForm()
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request,"User Registration was Successfull")
-            return redirect('my-login')
-        
-    context={'form':form}
-    return render(request,'register.html',context=context)
+            username = form.cleaned_data['username']
+            if User.objects.filter(username=username).exists():
+                messages.error(request, 'Username already exists')
+            else:
+                form.save()
+                messages.success(request, "User Registration was Successful")
+                return redirect('my-login')
+    context = {'form': form}
+    return render(request, 'register.html', context=context)
+
 
 
 def my_login(request):
@@ -132,10 +176,10 @@ def deleteAccount(request):
     return render(request,'profile/delete-account.html')
     
 
-def user_logout(request):
-     auth.logout(request)
-     messages.success(request, 'You have been logged out successfully!')
-     return redirect('my-login')
    
 
+from django.contrib.auth import logout
+
+def user_logout(request):
+    return render(request, 'logout.html')
 

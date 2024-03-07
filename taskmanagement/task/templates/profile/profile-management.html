@@ -14,18 +14,25 @@
         <div class="card mt-5">
             <div class="card-header">
                 <h2 class="text-center">Update your Profile</h2>
+                
             </div>
             <div class="card-body">
                 <form method="POST">
                     {% csrf_token %}
-                    {{ user_form.as_p }}
+                    <div class="mb-3">
+                        {{ user_form.username.label_tag }}
+                        {{ user_form.username }}
+                    </div>
+                    <div class="mb-3">
+                        {{ user_form.email.label_tag }}
+                        {{ user_form.email }}
+                    </div>
                     <button type="submit" class="btn btn-primary">Update</button>
                 </form>
             </div>
             <div class="container bg-white shadow-md p-5 form-layout" style="margin-top: 20px;">
                 <h2 class="text-center">Delete Account</h2>
                 <hr>
-          
                 <a href="{% url 'delete-account' %}" class="btn btn-info">Delete your Account</a>
             </div>
         </div>

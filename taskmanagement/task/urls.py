@@ -13,6 +13,10 @@ urlpatterns = [
     path('profile-management/',views.profile_management,name="profile-management"),
     path('delete-account/',views.deleteAccount,name="delete-account"),
     path('user-logout/',views.user_logout,name="user-logout"),
+    path('access-denied/', views.accessDenied, name='access-denied'),
+    path('task-denied/', views.taskDenied, name='task-denied'),
+
+    
     
 
 

@@ -10,16 +10,35 @@
 </head>
 <body>
     {% include 'profile/base.html' %}
-    <div class="container text-center">
-        <!-- <div class="dashboard-box"> Add a class for the box -->
-            
-            <br><hr>
-            <h3 >This is our Dashboard page!</h3>
-            <hr>
-            <p>Welcome, to Task Management <br><br>Your personal task manager application!</p>
-            <a href="{% url 'profile-management' %}" class="btn btn-info">Profile Management</a>
-           
-    </div>
+    <style>
+    /* Define animation */
+    @keyframes slideInFromLeft {
+        0% {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+        100% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* Apply animation to the h3 element */
+    h3.animate-title {
+        animation: slideInFromLeft 0.5s ease-out;
+    }
+</style>
+
+<div class="container text-center">
+    <!-- <div class="dashboard-box"> Add a class for the box -->
+    <br><hr>
+    <!-- Add class to the h3 element for animation -->
+    <h3 class="animate-title">This is our Dashboard page!</h3>
+    <hr>
+    <p>Welcome, to Task Management <br><br>Keep track of your records effectively</p>
+    <a href="{% url 'profile-management' %}" class="btn btn-info">Profile Management</a>
+</div>
+
     
       
 </body>
